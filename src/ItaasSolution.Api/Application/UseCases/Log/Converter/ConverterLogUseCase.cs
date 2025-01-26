@@ -56,7 +56,7 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
                 var logArray = _dataTypeLogConverter.ConverterStringToArrayLog(contentFileLog);
 
                 // Makes the validation of the log data
-                ValidateLogData(logArray);
+                ValidateDataLog(logArray);
 
                 // Converts array of the logs in list of the object
                 logs = _dataTypeLogConverter.ConverterArrayToListObjectLog(logArray);
@@ -91,10 +91,10 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         }
 
         // This method makes the validation of the log data
-        private void ValidateLogData(string[] logArray)
+        private void ValidateDataLog(string[] logArray)
         {
-            var logDataValidator = new DataLogValidator();
-            var resultLogDataValidator = logDataValidator.Validate(logArray);
+            var dataLogAgoraValidator = new DataLogAgoraValidator();
+            var resultLogDataValidator = dataLogAgoraValidator.Validate(logArray);
 
             if (resultLogDataValidator.IsValid == false)
             {
