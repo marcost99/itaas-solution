@@ -97,6 +97,15 @@ namespace ItaasSolution.Api.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The log not found..
+        /// </summary>
+        public static string LOG_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("LOG_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Unknown error..
         /// </summary>
         public static string UNKNOWN_ERROR {

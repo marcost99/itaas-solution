@@ -4,6 +4,6 @@ namespace ItaasSolution.Api.Domain.Repositories.Logs
 {
     public interface ILogsWriteOnlyRepository
     {
-        Task Add(ItaasSolution.Api.Domain.Entities.Log log);
+        Task AddAsync(ItaasSolution.Api.Domain.Entities.Log log);
     }
 }

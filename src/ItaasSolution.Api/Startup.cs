@@ -79,6 +79,7 @@ namespace ItaasSolution.Api
             services.AddScoped<IFileGenerator, FileGenerator>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILogsWriteOnlyRepository, LogsRepository>();
+            services.AddScoped<ILogsReadOnlyRepository, LogsRepository>();
         }
 
         // This method sets the settings of the infraestructure

@@ -3,6 +3,8 @@ using ItaasSolution.Api.Application.Formatting.Log;
 using ItaasSolution.Api.Application.Validations.Log;
 using ItaasSolution.Api.Communication.Requests;
 using ItaasSolution.Api.Communication.Responses;
+using ItaasSolution.Api.Domain.Repositories.Logs;
+using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +14,14 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 {
     public class ConverterLogUseCase : IConverterLogUseCase
     {
+        private readonly ILogsReadOnlyRepository _repository;
         private readonly IDataTypeLogConverter _dataTypeLogConverter;
         private readonly IFormatContentLogConverter _formatContentAgoraLogConverter;
 
-        public ConverterLogUseCase(IDataTypeLogConverter logConverter, IFormatContentLogConverter formatContentAgoraLogConverter)
+        public ConverterLogUseCase(ILogsReadOnlyRepository repository, IDataTypeLogConverter dataTypeLogConverter, IFormatContentLogConverter formatContentAgoraLogConverter)
         {
-            _dataTypeLogConverter = logConverter;
+            _repository = repository;
+            _dataTypeLogConverter = dataTypeLogConverter;
             _formatContentAgoraLogConverter = formatContentAgoraLogConverter;
         }
         
@@ -30,17 +34,25 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 
             if (request.IdLog > 0)
             { // Is the id of an log of the database in that the data must be gotten and converted in format solicited.
+                
+                var log = await _repository.GetByIdAsync(request.IdLog);
+
+                if (log == null)
+                {
+                    throw new NotFoundException(ResourceErrorMessages.LOG_NOT_FOUND);
+                }
+
                 logs = new List<ItaasSolution.Api.Domain.Entities.Log>()
                 {
                     new ItaasSolution.Api.Domain.Entities.Log()
                     {
-                        Id = request.IdLog,
-                        HtttpMethod = "GET",
-                        StatusCode = 200,
-                        UriPath = "/robots.txt",
-                        TimeTaken = (decimal)100.2,
-                        ResponseSize = 312,
-                        CacheStatus = "HIT",
+                        Id = log.Id,
+                        HtttpMethod = log.HtttpMethod,
+                        StatusCode = log.StatusCode,
+                        UriPath = log.UriPath,
+                        TimeTaken = log.TimeTaken,
+                        ResponseSize = log.ResponseSize,
+                        CacheStatus = log.CacheStatus,
                     }
                 };
             }

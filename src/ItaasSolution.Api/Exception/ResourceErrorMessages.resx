@@ -129,6 +129,9 @@
   <data name="LOG_DATA_INVALID" xml:space="preserve">
     <value>The format the log is not valid.</value>
   </data>
+  <data name="LOG_NOT_FOUND" xml:space="preserve">
+    <value>The log not found.</value>
+  </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Unknown error.</value>
   </data>
