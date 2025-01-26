@@ -1,4 +1,6 @@
-﻿namespace ItaasSolution.Api.Domain.Entities
+﻿using System;
+
+namespace ItaasSolution.Api.Domain.Entities
 {
     public class Log
     {
@@ -9,5 +11,6 @@
         public decimal TimeTaken { get; set; }
         public long ResponseSize { get; set; }
         public string CacheStatus { get; set; }
+        public DateTime DateCreation { get; set; }
     }
 }

@@ -6,6 +6,6 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 {
     public interface IConverterLogUseCase
     {
-        Task<ResponseConverterLogJson> Execute(RequestConverterLogJson request);
+        Task<ResponseConverterLogJson> ExecuteAsync(RequestConverterLogJson request);
     }
 }

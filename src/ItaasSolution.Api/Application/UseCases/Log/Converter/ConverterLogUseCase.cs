@@ -1,16 +1,28 @@
 ﻿using ItaasSolution.Api.Communication.Requests;
 using ItaasSolution.Api.Communication.Responses;
+using ItaasSolution.Api.Exception;
+using ItaasSolution.Api.Exception.ExceptionsBase;
+using ItaasSolution.Api.Infraestructure.Services;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 {
     public class ConverterLogUseCase : IConverterLogUseCase
     {
-        public async Task<ResponseConverterLogJson> Execute(RequestConverterLogJson request)
+        private readonly IFileGenerator _fileGenerator;
+        
+        public ConverterLogUseCase(IFileGenerator fileGenerator)
         {
+            _fileGenerator = fileGenerator;
+        }
+        
+        public async Task<ResponseConverterLogJson> ExecuteAsync(RequestConverterLogJson request)
+        {
+            Validate(request);
+
             var logs = new List<ItaasSolution.Api.Domain.Entities.Log>()
             {
                 new ItaasSolution.Api.Domain.Entities.Log()
@@ -38,9 +50,9 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
             string urlFileLogConverted = string.Empty;
             string contentTextLogConverted = string.Empty;
             
-            if (request.Format == Communication.Enums.FormatContentLogConverted.UrlFile)
-                urlFileLogConverted = await GenerateUrlFileLog(logs);
-            else if (request.Format == Communication.Enums.FormatContentLogConverted.ContentText)
+            if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.UrlFile)
+                urlFileLogConverted = await GenerateUrlFileLogAsync(logs);
+            else if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.ContentText)
                 contentTextLogConverted = GenerateContentTextLog(logs);
 
             return new ResponseConverterLogJson()
@@ -51,7 +63,7 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         }
 
         // This method converts the datas to the format Agora
-        public string GenerateContentTextLog(List<ItaasSolution.Api.Domain.Entities.Log> logs)
+        private string GenerateContentTextLog(List<ItaasSolution.Api.Domain.Entities.Log> logs)
         {
             var contentTextLog = $"#Version: 1.0\n" +
                    $"#Date: {DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss")}\n" +
@@ -64,31 +76,31 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         }
 
         // This method converts the datas to the format Agora and saves an file
-        public async Task<string> GenerateUrlFileLog(List<ItaasSolution.Api.Domain.Entities.Log> logs)
+        private async Task<string> GenerateUrlFileLogAsync(List<ItaasSolution.Api.Domain.Entities.Log> logs)
         {
+            // converts the datas to the format Agora
             var contentTextLogConverted = GenerateContentTextLog(logs);
 
-            var solutionDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            var repositoryPath = Path.Combine(solutionDirectory, "repository\\logs\\");
+            // saves a file
+            var result = await _fileGenerator.FileGeneratorAsync(contentTextLogConverted, "input");
 
-            var now = DateTime.UtcNow;
-            var nameFile = @"input_" + $"{now.Year}{now.Month:D2}{now.Day:D2}{now.Hour:D2}{now.Minute:D2}{now.Second:D2}{now.Millisecond:D3}.txt";
-            var file = repositoryPath + nameFile;
-
-            await WriteToFileAsync(contentTextLogConverted, file);
-
-            if (File.Exists(file))
-                return "https://localhost:44395/logs/" + nameFile;
+            // generates the url with the file
+            if (result.fileGenerated == true)
+                return "https://localhost:44395/logs/" + result.nameFile;
             else
-                throw new Exception("Error an saved file of the log.");
+                throw new ErrorOnValidationException(new List<string>() { ResourceErrorMessages.FILE_GENERATOR_ERROR });
         }
 
-        // This method save an file
-        public async Task WriteToFileAsync(string conteudo, string caminhoArquivo)
+        // This method makes the validation of the request
+        private void Validate(RequestConverterLogJson request)
         {
-            using (StreamWriter writer = new StreamWriter(caminhoArquivo))
+            var validator = new LogValidator();
+            var result = validator.Validate(request);
+
+            if (result.IsValid == false)
             {
-                await writer.WriteAsync(conteudo);
+                var errorMessages = result.Errors.Select(f => f.ErrorMessage).ToList();
+                throw new ErrorOnValidationException(errorMessages);
             }
         }
     }

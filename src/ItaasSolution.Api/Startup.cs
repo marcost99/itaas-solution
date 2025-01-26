@@ -1,4 +1,6 @@
-﻿using ItaasSolution.Api.Application.UseCases.Log.Converter;
+﻿using ItaasSolution.Api.Api.Filters;
+using ItaasSolution.Api.Application.UseCases.Log.Converter;
+using ItaasSolution.Api.Infraestructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,13 +29,15 @@ namespace ItaasSolution.Api
             // Sets the dependency injection
             AddApplication(services);
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            // If have an exception redirect to class ExceptionFilter
+            services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method sets the dependency injection of the application
         public void AddApplication(IServiceCollection services)
         {
             services.AddScoped<IConverterLogUseCase, ConverterLogUseCase>();
+            services.AddScoped<IFileGenerator, FileGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

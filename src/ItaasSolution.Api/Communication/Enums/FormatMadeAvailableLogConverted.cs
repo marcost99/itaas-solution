@@ -1,6 +1,6 @@
 ﻿namespace ItaasSolution.Api.Communication.Enums
 {
-    public enum FormatContentLogConverted
+    public enum FormatMadeAvailableLogConverted
     {
         UrlFile = 0,
         ContentText = 1

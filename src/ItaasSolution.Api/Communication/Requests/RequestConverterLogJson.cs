@@ -4,7 +4,7 @@ namespace ItaasSolution.Api.Communication.Requests
 {
     public class RequestConverterLogJson
     {
-        public FormatContentLogConverted Format { get; set; }
+        public FormatMadeAvailableLogConverted FormatMadeAvailableLogConverted { get; set; }
         public long IdLog { get; set; }
         public string UrlLog { get; set; }
     }
