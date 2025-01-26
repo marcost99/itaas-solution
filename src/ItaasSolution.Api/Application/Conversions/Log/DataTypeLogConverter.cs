@@ -35,8 +35,8 @@ namespace ItaasSolution.Api.Application.Formatting.Log
 
                 var log = new ItaasSolution.Api.Domain.Entities.Log
                 {
-                    ResponseSize = long.Parse(parts[0]),
-                    StatusCode = long.Parse(parts[1]),
+                    ResponseSize = int.Parse(parts[0]),
+                    StatusCode = int.Parse(parts[1]),
                     CacheStatus = parts[2],
                     HtttpMethod = methodAndPath[0].Trim('"'),
                     UriPath = methodAndPath[1],
