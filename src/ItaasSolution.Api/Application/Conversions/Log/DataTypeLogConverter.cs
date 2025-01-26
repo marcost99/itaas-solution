@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,14 +35,15 @@ namespace ItaasSolution.Api.Application.Formatting.Log
                 var methodAndPath = parts[3].Split(' ');
 
                 var log = new ItaasSolution.Api.Domain.Entities.Log
-                {
-                    ResponseSize = int.Parse(parts[0]),
-                    StatusCode = int.Parse(parts[1]),
-                    CacheStatus = parts[2],
-                    HtttpMethod = methodAndPath[0].Trim('"'),
-                    UriPath = methodAndPath[1],
-                    TimeTaken = decimal.Parse(parts[4])
-                };
+                (
+                    methodAndPath[0].Trim('"'),
+                    int.Parse(parts[1]),
+                    methodAndPath[1],
+                    decimal.Parse(parts[4]),
+                    int.Parse(parts[0]),
+                    parts[2],
+                    DateTime.UtcNow
+                );
 
                 logs.Add(log);
             }

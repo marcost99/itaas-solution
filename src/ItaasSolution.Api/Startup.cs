@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using ItaasSolution.Api.Infraestructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using ItaasSolution.Api.Application.UseCases.Log.Register;
 
 namespace ItaasSolution.Api
 {
@@ -74,6 +75,7 @@ namespace ItaasSolution.Api
             services.AddScoped<IConverterLogUseCase, ConverterLogUseCase>();
             services.AddScoped<IDataTypeLogConverter, DataTypeLogConverter>();
             services.AddScoped<IFormatContentLogConverter, FormatContentAgoraLogConverter>();
+            services.AddScoped<IRegisterLogUseCase, RegisterLogUseCase>();
 
             // Infraestructure
             services.AddScoped<IFileGenerator, FileGenerator>();

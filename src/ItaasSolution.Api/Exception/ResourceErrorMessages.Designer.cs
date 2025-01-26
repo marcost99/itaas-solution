@@ -61,6 +61,24 @@ namespace ItaasSolution.Api.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The CacheStatus must be up to 20 characters..
+        /// </summary>
+        public static string CACHE_STATUS_MAX_SIZE {
+            get {
+                return ResourceManager.GetString("CACHE_STATUS_MAX_SIZE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The CacheStatus not must be empty..
+        /// </summary>
+        public static string CACHE_STATUS_NOT_EMPTY {
+            get {
+                return ResourceManager.GetString("CACHE_STATUS_NOT_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Ocurred an error in the generation of the file..
         /// </summary>
         public static string FILE_GENERATOR_ERROR {
@@ -75,6 +93,24 @@ namespace ItaasSolution.Api.Exception {
         public static string FORMAT_LOG_INVALID {
             get {
                 return ResourceManager.GetString("FORMAT_LOG_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The HttpMethod must be up to 20 characters..
+        /// </summary>
+        public static string HTTP_METHOD_MAX_SIZE {
+            get {
+                return ResourceManager.GetString("HTTP_METHOD_MAX_SIZE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The HttpMethod not must be empty..
+        /// </summary>
+        public static string HTTP_METHOD_NOT_EMPTY {
+            get {
+                return ResourceManager.GetString("HTTP_METHOD_NOT_EMPTY", resourceCulture);
             }
         }
         
@@ -106,11 +142,56 @@ namespace ItaasSolution.Api.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The ResponseSize must be greater than zero..
+        /// </summary>
+        public static string RESPONSE_SIZE_GREATER_THAN_ZERO {
+            get {
+                return ResourceManager.GetString("RESPONSE_SIZE_GREATER_THAN_ZERO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The StatusCode must be greater than zero..
+        /// </summary>
+        public static string STATUS_CODE_GREATER_THAN_ZERO {
+            get {
+                return ResourceManager.GetString("STATUS_CODE_GREATER_THAN_ZERO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The TimeTaken must be greater than zero..
+        /// </summary>
+        public static string TIME_TAKEN_GREATER_THAN_ZERO {
+            get {
+                return ResourceManager.GetString("TIME_TAKEN_GREATER_THAN_ZERO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Unknown error..
         /// </summary>
         public static string UNKNOWN_ERROR {
             get {
                 return ResourceManager.GetString("UNKNOWN_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The HttpMethod must be up to 50 characters..
+        /// </summary>
+        public static string URI_PATH_MAX_SIZE {
+            get {
+                return ResourceManager.GetString("URI_PATH_MAX_SIZE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The UriPath not must be empty..
+        /// </summary>
+        public static string URI_PATH_NOT_EMPTY {
+            get {
+                return ResourceManager.GetString("URI_PATH_NOT_EMPTY", resourceCulture);
             }
         }
         

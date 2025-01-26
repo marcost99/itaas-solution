@@ -6,6 +6,7 @@ using ItaasSolution.Api.Communication.Responses;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,16 +45,16 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 
                 logs = new List<ItaasSolution.Api.Domain.Entities.Log>()
                 {
-                    new ItaasSolution.Api.Domain.Entities.Log()
-                    {
-                        Id = log.Id,
-                        HtttpMethod = log.HtttpMethod,
-                        StatusCode = log.StatusCode,
-                        UriPath = log.UriPath,
-                        TimeTaken = log.TimeTaken,
-                        ResponseSize = log.ResponseSize,
-                        CacheStatus = log.CacheStatus,
-                    }
+                    new ItaasSolution.Api.Domain.Entities.Log
+                    (
+                        log.HtttpMethod,
+                        log.StatusCode,
+                        log.UriPath,
+                        log.TimeTaken,
+                        log.ResponseSize,
+                        log.CacheStatus,
+                        DateTime.UtcNow
+                    )
                 };
             }
             else

@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CACHE_STATUS_MAX_SIZE" xml:space="preserve">
+    <value>The CacheStatus must be up to 20 characters.</value>
+  </data>
+  <data name="CACHE_STATUS_NOT_EMPTY" xml:space="preserve">
+    <value>The CacheStatus not must be empty.</value>
+  </data>
   <data name="FILE_GENERATOR_ERROR" xml:space="preserve">
     <value>Ocurred an error in the generation of the file.</value>
   </data>
   <data name="FORMAT_LOG_INVALID" xml:space="preserve">
     <value>The format made available the file is invalid. Chooses entry the seguints options (0: url of the file of the log; 1: content the log)</value>
+  </data>
+  <data name="HTTP_METHOD_MAX_SIZE" xml:space="preserve">
+    <value>The HttpMethod must be up to 20 characters.</value>
+  </data>
+  <data name="HTTP_METHOD_NOT_EMPTY" xml:space="preserve">
+    <value>The HttpMethod not must be empty.</value>
   </data>
   <data name="ID_LOG_GREATER_THAN_ZERO" xml:space="preserve">
     <value>The id of the log must be greater than zero.</value>
@@ -132,8 +144,23 @@
   <data name="LOG_NOT_FOUND" xml:space="preserve">
     <value>The log not found.</value>
   </data>
+  <data name="RESPONSE_SIZE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>The ResponseSize must be greater than zero.</value>
+  </data>
+  <data name="STATUS_CODE_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>The StatusCode must be greater than zero.</value>
+  </data>
+  <data name="TIME_TAKEN_GREATER_THAN_ZERO" xml:space="preserve">
+    <value>The TimeTaken must be greater than zero.</value>
+  </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Unknown error.</value>
+  </data>
+  <data name="URI_PATH_MAX_SIZE" xml:space="preserve">
+    <value>The HttpMethod must be up to 50 characters.</value>
+  </data>
+  <data name="URI_PATH_NOT_EMPTY" xml:space="preserve">
+    <value>The UriPath not must be empty.</value>
   </data>
   <data name="URL_LOG_EMPTY" xml:space="preserve">
     <value>The URL of the log not must be empty.</value>
