@@ -1,4 +1,5 @@
 ﻿using ItaasSolution.Api.Api.Filters;
+using ItaasSolution.Api.Application.Conversions.Log;
 using ItaasSolution.Api.Application.Formatting.Log;
 using ItaasSolution.Api.Application.UseCases.Log.Converter;
 using ItaasSolution.Api.Infraestructure.Services;
@@ -63,7 +64,8 @@ namespace ItaasSolution.Api
         {
             services.AddScoped<IConverterLogUseCase, ConverterLogUseCase>();
             services.AddScoped<IFileGenerator, FileGenerator>();
-            services.AddScoped<ILogListFormatter, LogListFormatter>();
+            services.AddScoped<IDataTypeLogConverter, DataTypeLogConverter>();
+            services.AddScoped<IFormatContentAgoraLogConverter, FormatContentAgoraLogConverter>();
         }
 
         // This method sets the settings of the infraestructure
@@ -82,7 +84,5 @@ namespace ItaasSolution.Api
                 });
             }
         }
-
-
     }
 }

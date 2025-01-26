@@ -15,7 +15,7 @@ namespace ItaasSolution.Api.Infraestructure.Services
         }
 
         // This method converts the datas to the format Agora and saves a file
-        public async Task<(bool fileGenerated, string nameFile)> FileGeneratorAsync(string textFile)
+        public async Task<bool> FileGeneratorAsync(string textFile, string fileName)
         {
             var fileGenerated = false;
 
@@ -24,19 +24,18 @@ namespace ItaasSolution.Api.Infraestructure.Services
                 .FirstOrDefault(repo => repo["Tag"] == "agora-logs")?["PhysicalPath"];
             var agoraLogsPath = Path.GetFullPath(physicalPath);
 
-            var nameFile = @"input-1.txt";
-            var file = Path.Combine(agoraLogsPath, nameFile);
+            var file = Path.Combine(agoraLogsPath, fileName);
 
             await WriteToFileAsync(textFile, file);
 
             if (File.Exists(file))
                 fileGenerated = true;
 
-            return (fileGenerated, nameFile);
+            return fileGenerated;
         }
 
         // This method saves a file
-        public async Task WriteToFileAsync(string conteudo, string caminhoArquivo)
+        private async Task WriteToFileAsync(string conteudo, string caminhoArquivo)
         {
             using (StreamWriter writer = new StreamWriter(caminhoArquivo))
             {

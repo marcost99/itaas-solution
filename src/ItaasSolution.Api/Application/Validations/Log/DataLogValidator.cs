@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace ItaasSolution.Api.Application.Validations.Log
 {
-    public class LogDataValidator : AbstractValidator<string[]>
+    public class DataLogValidator : AbstractValidator<string[]>
     {
-        public LogDataValidator()
+        public DataLogValidator()
         {
             RuleFor(logData => logData)
                 .Must(logData =>

@@ -195,5 +195,5 @@ FakesAssemblies/
 coverage.opencover.xml
 
 # Files the logs
-#/repository/logs/agora/*
-#/repository/logs/minha-cdn/*
+/repository/logs/agora/*
+/repository/logs/minha-cdn/*
