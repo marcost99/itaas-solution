@@ -126,10 +126,16 @@
   <data name="ID_LOG_GREATER_THAN_ZERO" xml:space="preserve">
     <value>The id of the log must be greater than zero.</value>
   </data>
+  <data name="LOG_DATA_INVALID" xml:space="preserve">
+    <value>The format the log is not valid.</value>
+  </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Unknown error.</value>
   </data>
   <data name="URL_LOG_EMPTY" xml:space="preserve">
     <value>The URL of the log not must be empty.</value>
+  </data>
+  <data name="URL_LOG_INVALID" xml:space="preserve">
+    <value>The URL of the log is invalid.</value>
   </data>
 </root>

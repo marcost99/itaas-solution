@@ -88,6 +88,15 @@ namespace ItaasSolution.Api.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The format the log is not valid..
+        /// </summary>
+        public static string LOG_DATA_INVALID {
+            get {
+                return ResourceManager.GetString("LOG_DATA_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Unknown error..
         /// </summary>
         public static string UNKNOWN_ERROR {
@@ -102,6 +111,15 @@ namespace ItaasSolution.Api.Exception {
         public static string URL_LOG_EMPTY {
             get {
                 return ResourceManager.GetString("URL_LOG_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The URL of the log is invalid..
+        /// </summary>
+        public static string URL_LOG_INVALID {
+            get {
+                return ResourceManager.GetString("URL_LOG_INVALID", resourceCulture);
             }
         }
     }
