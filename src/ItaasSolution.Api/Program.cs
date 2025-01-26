@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace ItaasSolution.Api.Api
+namespace ItaasSolution.Api
 {
     public class Program
     {

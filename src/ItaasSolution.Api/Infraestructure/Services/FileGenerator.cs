@@ -1,22 +1,31 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ItaasSolution.Api.Infraestructure.Services
 {
     public class FileGenerator : IFileGenerator
     {
+        private readonly IConfiguration _configuration;
+        public FileGenerator(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         // This method converts the datas to the format Agora and saves a file
-        public async Task<(bool fileGenerated, string nameFile)> FileGeneratorAsync(string textFile, string prefixNameFile)
+        public async Task<(bool fileGenerated, string nameFile)> FileGeneratorAsync(string textFile)
         {
             var fileGenerated = false;
 
-            var solutionDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName;
-            var repositoryPath = Path.Combine(solutionDirectory, "repository\\logs\\");
+            var fileRepositories = _configuration.GetSection("Settings:FileRepository").Get<List<Dictionary<string, string>>>();
+            var physicalPath = fileRepositories
+                .FirstOrDefault(repo => repo["Tag"] == "agora-logs")?["PhysicalPath"];
+            var agoraLogsPath = Path.GetFullPath(physicalPath);
 
-            var now = DateTime.UtcNow;
-            var nameFile = @"" + prefixNameFile + "_" + $"{now.Year}{now.Month:D2}{now.Day:D2}{now.Hour:D2}{now.Minute:D2}{now.Second:D2}{now.Millisecond:D3}.txt";
-            var file = repositoryPath + nameFile;
+            var nameFile = @"input-1.txt";
+            var file = Path.Combine(agoraLogsPath, nameFile);
 
             await WriteToFileAsync(textFile, file);
 

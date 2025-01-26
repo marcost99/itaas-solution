@@ -1,4 +1,5 @@
 ﻿using ItaasSolution.Api.Api.Filters;
+using ItaasSolution.Api.Application.Formatting.Log;
 using ItaasSolution.Api.Application.UseCases.Log.Converter;
 using ItaasSolution.Api.Infraestructure.Services;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ItaasSolution.Api
@@ -33,13 +35,6 @@ namespace ItaasSolution.Api
             services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
-        // This method sets the dependency injection of the application
-        public void AddApplication(IServiceCollection services)
-        {
-            services.AddScoped<IConverterLogUseCase, ConverterLogUseCase>();
-            services.AddScoped<IFileGenerator, FileGenerator>();
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -57,16 +52,35 @@ namespace ItaasSolution.Api
 
             app.UseHttpsRedirection();
 
-            // Sets the middleware to permits files statics
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), "..\\..\\repository\\logs")),
-                    RequestPath = "/logs",
-
-            });
+            // Sets the infraestructure
+            AddInfraestructure(app);
 
             app.UseMvc();
+        }
+
+        // This method sets the dependency injection of the application
+        public void AddApplication(IServiceCollection services)
+        {
+            services.AddScoped<IConverterLogUseCase, ConverterLogUseCase>();
+            services.AddScoped<IFileGenerator, FileGenerator>();
+            services.AddScoped<ILogListFormatter, LogListFormatter>();
+        }
+
+        // This method sets the settings of the infraestructure
+        public void AddInfraestructure(IApplicationBuilder app)
+        {
+            // Sets the middleware to permits files statics
+            var fileRepositories = Configuration.GetSection("Settings:FileRepository").Get<List<Dictionary<string, string>>>();
+
+            foreach (var repo in fileRepositories)
+            {
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), repo["PhysicalPath"])),
+                    RequestPath = repo["RequestPath"]
+                });
+            }
         }
 
 

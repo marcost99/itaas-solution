@@ -1,9 +1,12 @@
-﻿using ItaasSolution.Api.Application.Validations.Log;
+﻿using FluentValidation;
+using ItaasSolution.Api.Application.Formatting.Log;
+using ItaasSolution.Api.Application.Validations.Log;
 using ItaasSolution.Api.Communication.Requests;
 using ItaasSolution.Api.Communication.Responses;
 using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
 using ItaasSolution.Api.Infraestructure.Services;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +17,15 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 {
     public class ConverterLogUseCase : IConverterLogUseCase
     {
+        private readonly IConfiguration _configuration;
+        private readonly ILogListFormatter _logListFormatter;
         private readonly IFileGenerator _fileGenerator;
         
-        public ConverterLogUseCase(IFileGenerator fileGenerator)
+        public ConverterLogUseCase(IConfiguration configuration, ILogListFormatter logListFormatter, IFileGenerator fileGenerator)
         {
             _fileGenerator = fileGenerator;
+            _configuration = configuration;
+            _logListFormatter = logListFormatter;
         }
         
         public async Task<ResponseConverterLogJson> ExecuteAsync(RequestConverterLogJson request)
@@ -62,15 +69,17 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
                 if (!string.IsNullOrWhiteSpace(request.UrlLog))
                     contentFileLog = await ReadStringFromUrlAsync(request.UrlLog);
 
-                // Makes the validation of the log data
-                ValidateLogData(contentFileLog);
-
                 logs = new List<ItaasSolution.Api.Domain.Entities.Log>();
-                var lines = contentFileLog.Split('\n');
+                
+                // Formats the string of the log in an list of the log
+                var logList = _logListFormatter.ListFormatter(contentFileLog);
 
-                foreach (var line in lines)
+                // Makes the validation of the log data
+                ValidateLogData(logList);
+
+                foreach (var logLine in logList)
                 {
-                    var parts = line.Split('|');
+                    var parts = logLine.Split('|');
                     var methodAndPath = parts[3].Split(' ');
 
                     var log = new ItaasSolution.Api.Domain.Entities.Log
@@ -93,7 +102,7 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
             if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.UrlFile)
                 urlFileLogConverted = await GenerateUrlFileLogAsync(logs);
             else if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.ContentText)
-                contentTextLogConverted = GenerateContentTextLog(logs);
+                contentTextLogConverted = GenerateContentTextLogAgora(logs);
 
             return new ResponseConverterLogJson()
             {
@@ -103,7 +112,7 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         }
 
         // This method converts the datas to the format Agora
-        private string GenerateContentTextLog(List<ItaasSolution.Api.Domain.Entities.Log> logs)
+        private string GenerateContentTextLogAgora(List<ItaasSolution.Api.Domain.Entities.Log> logs)
         {
             var contentTextLog = $"#Version: 1.0\n" +
                    $"#Date: {DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss")}\n" +
@@ -119,16 +128,24 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         private async Task<string> GenerateUrlFileLogAsync(List<ItaasSolution.Api.Domain.Entities.Log> logs)
         {
             // converts the datas to the format Agora
-            var contentTextLogConverted = GenerateContentTextLog(logs);
+            var contentTextLogConverted = GenerateContentTextLogAgora(logs);
 
             // saves a file
-            var result = await _fileGenerator.FileGeneratorAsync(contentTextLogConverted, "input");
+            var result = await _fileGenerator.FileGeneratorAsync(contentTextLogConverted);
 
             // generates the url with the file
             if (result.fileGenerated == true)
-                return "https://localhost:44395/logs/" + result.nameFile;
+            {
+                var fileRepositories = _configuration.GetSection("Settings:FileRepository").Get<List<Dictionary<string, string>>>();
+                var requestPath = fileRepositories
+                    .FirstOrDefault(repo => repo["Tag"] == "agora-logs")?["RequestPath"];
+
+                return "https://localhost:44395" + requestPath + "/" + result.nameFile;
+            }
             else
+            {
                 throw new ErrorOnValidationException(new List<string>() { ResourceErrorMessages.FILE_GENERATOR_ERROR });
+            }
         }
 
         // This method makes the validation of the request
@@ -145,10 +162,10 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         }
 
         // This method makes the validation of the log data
-        private void ValidateLogData(string contentFileLog)
+        private void ValidateLogData(string[] logList)
         {
             var logDataValidator = new LogDataValidator();
-            var resultLogDataValidator = logDataValidator.Validate(contentFileLog);
+            var resultLogDataValidator = logDataValidator.Validate(logList);
 
             if (resultLogDataValidator.IsValid == false)
             {
