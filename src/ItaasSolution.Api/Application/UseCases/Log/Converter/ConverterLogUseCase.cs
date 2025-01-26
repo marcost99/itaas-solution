@@ -13,9 +13,9 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
     public class ConverterLogUseCase : IConverterLogUseCase
     {
         private readonly IDataTypeLogConverter _dataTypeLogConverter;
-        private readonly IFormatContentAgoraLogConverter _formatContentAgoraLogConverter;
+        private readonly IFormatContentLogConverter _formatContentAgoraLogConverter;
 
-        public ConverterLogUseCase(IDataTypeLogConverter logConverter, IFormatContentAgoraLogConverter formatContentAgoraLogConverter)
+        public ConverterLogUseCase(IDataTypeLogConverter logConverter, IFormatContentLogConverter formatContentAgoraLogConverter)
         {
             _dataTypeLogConverter = logConverter;
             _formatContentAgoraLogConverter = formatContentAgoraLogConverter;
@@ -66,9 +66,9 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
             string contentTextLogConverted = string.Empty;
             
             if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.UrlFile)
-                urlFileLogConverted = await _formatContentAgoraLogConverter.ConverterListObjectToUrlFileLogAgoraAsync(logs);
+                urlFileLogConverted = await _formatContentAgoraLogConverter.ConverterListObjectToUrlFileLogAsync(logs, 1);
             else if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.ContentText)
-                contentTextLogConverted = _formatContentAgoraLogConverter.ConverterListObjectToStringLogAgora(logs);
+                contentTextLogConverted = _formatContentAgoraLogConverter.ConverterListObjectToStringLog(logs);
 
             return new ResponseConverterLogJson()
             {
@@ -93,8 +93,8 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         // This method makes the validation of the log data
         private void ValidateDataLog(string[] logArray)
         {
-            var dataLogAgoraValidator = new DataLogAgoraValidator();
-            var resultLogDataValidator = dataLogAgoraValidator.Validate(logArray);
+            var dataLogMinhaCdnValidator = new DataLogMinhaCdnValidator();
+            var resultLogDataValidator = dataLogMinhaCdnValidator.Validate(logArray);
 
             if (resultLogDataValidator.IsValid == false)
             {

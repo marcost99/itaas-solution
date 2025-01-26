@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ItaasSolution.Api.Application.Conversions.Log
 {
-    public class FormatContentAgoraLogConverter : IFormatContentAgoraLogConverter
+    public class FormatContentAgoraLogConverter : IFormatContentLogConverter
     {
         private readonly IConfiguration _configuration;
         private readonly IFileGenerator _fileGenerator;
@@ -21,7 +21,7 @@ namespace ItaasSolution.Api.Application.Conversions.Log
         }
 
         // This method converts the datas to the format Agora
-        public string ConverterListObjectToStringLogAgora(List<ItaasSolution.Api.Domain.Entities.Log> logs)
+        public string ConverterListObjectToStringLog(List<ItaasSolution.Api.Domain.Entities.Log> logs)
         {
             var contentTextLog = $"#Version: 1.0\n" +
                    $"#Date: {DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss")}\n" +
@@ -34,21 +34,25 @@ namespace ItaasSolution.Api.Application.Conversions.Log
         }
 
         // This method converts the datas to the format Agora and saves an file
-        public async Task<string> ConverterListObjectToUrlFileLogAgoraAsync(List<ItaasSolution.Api.Domain.Entities.Log> logs)
+        public async Task<string> ConverterListObjectToUrlFileLogAsync(List<ItaasSolution.Api.Domain.Entities.Log> logs, long idFileLog)
         {
             // converts the datas to the format Agora
-            var contentTextLogConverted = ConverterListObjectToStringLogAgora(logs);
+            var contentTextLogConverted = ConverterListObjectToStringLog(logs);
 
-            // saves a file
-            var fileName = "input-1.txt";
-            var result = await _fileGenerator.FileGeneratorAsync(contentTextLogConverted, fileName);
+            // saves an file
+            var tag = "agora-logs";
+            var fileRepositories = _configuration.GetSection("Settings:FileRepository").Get<List<Dictionary<string, string>>>();
+            var physicalPath = fileRepositories
+                .FirstOrDefault(repo => repo["Tag"] == tag)?["PhysicalPath"];
+            var fileName = string.Format("input-{0}.txt", idFileLog);
+            
+            var result = await _fileGenerator.FileGeneratorAsync(contentTextLogConverted, physicalPath, fileName);
 
             // generates the url with the file
             if (result == true)
             {
-                var fileRepositories = _configuration.GetSection("Settings:FileRepository").Get<List<Dictionary<string, string>>>();
                 var requestPath = fileRepositories
-                    .FirstOrDefault(repo => repo["Tag"] == "agora-logs")?["RequestPath"];
+                    .FirstOrDefault(repo => repo["Tag"] == tag)?["RequestPath"];
 
                 return "https://localhost:44395" + requestPath + "/" + fileName;
             }

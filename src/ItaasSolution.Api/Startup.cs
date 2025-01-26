@@ -65,7 +65,7 @@ namespace ItaasSolution.Api
             services.AddScoped<IConverterLogUseCase, ConverterLogUseCase>();
             services.AddScoped<IFileGenerator, FileGenerator>();
             services.AddScoped<IDataTypeLogConverter, DataTypeLogConverter>();
-            services.AddScoped<IFormatContentAgoraLogConverter, FormatContentAgoraLogConverter>();
+            services.AddScoped<IFormatContentLogConverter, FormatContentAgoraLogConverter>();
         }
 
         // This method sets the settings of the infraestructure
