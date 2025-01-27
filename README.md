@@ -7,6 +7,7 @@
 - Validações: biblioteca FluentValidation
 - testes unitários: Xunit utilizando a biblioteca FluentAssertions
 
+
 2- Padrões e boas práticas de codificação implementados:
 - POO
 - SOLID
@@ -14,7 +15,9 @@
 - Injeção de dependência
 - Filtro de exceções
 
+
 3- Estruturação do Projeto:
+
 3.1- Pastas da raiz
 - repository: contém os arquivos de log salvos pela aplicação. Foi criado apenas para fins de demonstração da funcionalidade pois em um ambiente produtivo pode ser mais indicado salvar esses arquivos em um outro local
 - src: contém os arquivos com os códigos da aplicação
