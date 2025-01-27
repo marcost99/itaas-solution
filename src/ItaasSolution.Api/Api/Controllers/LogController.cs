@@ -1,6 +1,8 @@
 ﻿using ItaasSolution.Api.Application.UseCases.Log.Converter;
 using ItaasSolution.Api.Application.UseCases.Log.Register;
 using ItaasSolution.Api.Communication.Requests;
+using ItaasSolution.Api.Communication.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -19,6 +21,9 @@ namespace ItaasSolution.Api.Api.Controllers
         /// <param name="request.UrlLog">If the converter is fur url of the log must be filled this field. Is the url with an file of an log in that the content the file must be converted in format solicited. Example: https://s3.amazonaws.com/uux-itaas-static/minha-cdn-logs/input-01.txt</param>
         /// <returns>datas of play registered.</returns>
         [HttpPost("/api/log/converter")]
+        [ProducesResponseType(typeof(ResponseConverterLogJson), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ConverterAsync([FromServices] IConverterLogUseCase usecase, [FromBody] RequestConverterLogJson request)
         {
             var response = await usecase.ExecuteAsync(request);
@@ -36,6 +41,8 @@ namespace ItaasSolution.Api.Api.Controllers
         /// <param name="request.ResponseSize">Examplo: 312</param>
         /// <param name="request.CacheStatus">Examplo: HIT</param>
         [HttpPost]
+        [ProducesResponseType(typeof(ResponseRegisterLogJson), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RegisterAsync([FromServices] IRegisterLogUseCase usecase, [FromBody] RequestLogJson request)
         {
             var response = await usecase.ExecuteAsync(request);

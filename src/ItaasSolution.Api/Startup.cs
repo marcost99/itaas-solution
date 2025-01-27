@@ -2,21 +2,21 @@
 using ItaasSolution.Api.Application.Conversions.Log;
 using ItaasSolution.Api.Application.Formatting.Log;
 using ItaasSolution.Api.Application.UseCases.Log.Converter;
-using ItaasSolution.Api.Domain.Repositories.Logs;
+using ItaasSolution.Api.Application.UseCases.Log.Register;
 using ItaasSolution.Api.Domain.Repositories;
+using ItaasSolution.Api.Domain.Repositories.Logs;
+using ItaasSolution.Api.Infraestructure.DataAccess;
 using ItaasSolution.Api.Infraestructure.DataAccess.Repositories;
 using ItaasSolution.Api.Infraestructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
 using System.IO;
-using ItaasSolution.Api.Infraestructure.DataAccess;
-using Microsoft.EntityFrameworkCore;
-using ItaasSolution.Api.Application.UseCases.Log.Register;
 
 namespace ItaasSolution.Api
 {
@@ -32,6 +32,15 @@ namespace ItaasSolution.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // If have an exception redirect to class ExceptionFilter
+            services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Sets the NSwag
+            services.AddOpenApiDocument(config =>
+            {
+                config.Title = "My API";
+            });
+
             // Sets the response caching
             services.AddResponseCaching();
 
@@ -40,9 +49,6 @@ namespace ItaasSolution.Api
 
             // Sets the DbContext
             AddDbContext(services, Configuration);
-
-            // If have an exception redirect to class ExceptionFilter
-            services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +72,22 @@ namespace ItaasSolution.Api
             AddStaticFiles(app);
 
             app.UseMvc();
+
+            // Actives the middleware to server the NSwag
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
+            // Redirects to the page of the NSwag to default
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/")
+                {
+                    context.Response.Redirect("/swagger");
+                    return;
+                }
+
+                await next();
+            });
         }
 
         // This method sets the dependency injection of the application and infraestructure
