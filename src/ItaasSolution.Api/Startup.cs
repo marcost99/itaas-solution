@@ -2,6 +2,8 @@
 using ItaasSolution.Api.Application.Conversions.Log;
 using ItaasSolution.Api.Application.Formatting.Log;
 using ItaasSolution.Api.Application.UseCases.Log.Converter;
+using ItaasSolution.Api.Application.UseCases.Log.GetAll;
+using ItaasSolution.Api.Application.UseCases.Log.GetById;
 using ItaasSolution.Api.Application.UseCases.Log.Register;
 using ItaasSolution.Api.Domain.Repositories;
 using ItaasSolution.Api.Domain.Repositories.Logs;
@@ -60,6 +62,22 @@ namespace ItaasSolution.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Actives the middleware to server the NSwag
+                app.UseOpenApi();
+                app.UseSwaggerUi3();
+
+                // Redirects to the page of the NSwag to default
+                app.Use(async (context, next) =>
+                {
+                    if (context.Request.Path == "/")
+                    {
+                        context.Response.Redirect("/swagger");
+                        return;
+                    }
+
+                    await next();
+                });
             }
             else
             {
@@ -72,22 +90,6 @@ namespace ItaasSolution.Api
             AddStaticFiles(app);
 
             app.UseMvc();
-
-            // Actives the middleware to server the NSwag
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
-
-            // Redirects to the page of the NSwag to default
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path == "/")
-                {
-                    context.Response.Redirect("/swagger");
-                    return;
-                }
-
-                await next();
-            });
         }
 
         // This method sets the dependency injection of the application and infraestructure
@@ -98,6 +100,8 @@ namespace ItaasSolution.Api
             services.AddScoped<IDataTypeLogConverter, DataTypeLogConverter>();
             services.AddScoped<IFormatContentLogConverter, FormatContentAgoraLogConverter>();
             services.AddScoped<IRegisterLogUseCase, RegisterLogUseCase>();
+            services.AddScoped<IGetAllLogUseCase, GetAllLogUseCase>();
+            services.AddScoped<IGetByIdLogUseCase, GetByIdLogUseCase>();
 
             // Infraestructure
             services.AddScoped<IFileGenerator, FileGenerator>();
