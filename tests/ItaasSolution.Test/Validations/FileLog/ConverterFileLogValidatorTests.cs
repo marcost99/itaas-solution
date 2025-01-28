@@ -1,19 +1,19 @@
 ﻿using FluentAssertions;
-using ItaasSolution.Api.Application.Services;
-using ItaasSolution.Api.Application.Validations.Log;
+using ItaasSolution.Api.Application.Services.FileLog.Info;
+using ItaasSolution.Api.Application.Validations.FileLog;
 using ItaasSolution.Api.Communication.Enums;
-using ItaasSolution.Api.Communication.Requests;
+using ItaasSolution.Api.Communication.Requests.FileLog;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ItaasSolution.Test.Validations
+namespace ItaasSolution.Test.Validations.FileLog
 {
-    public class ConverterLogValidatorTests : IClassFixture<DependencyInjectionFixture>
+    public class ConverterFileLogValidatorTests : IClassFixture<DependencyInjectionFixture>
     {
         private readonly IInfoFileLog _infoFileLog;
 
-        public ConverterLogValidatorTests(DependencyInjectionFixture fixture)
+        public ConverterFileLogValidatorTests(DependencyInjectionFixture fixture)
         {
             _infoFileLog = fixture.ServiceProvider.GetRequiredService<IInfoFileLog>();
         }
@@ -21,8 +21,8 @@ namespace ItaasSolution.Test.Validations
         [Fact]
         public async Task Success()
         {
-            var validator = new RequestConverterLogJsonValidator(_infoFileLog); //initializes the class of validation
-            var request = new RequestConverterLogJson() 
+            var validator = new RequestConverterFileLogJsonValidator(_infoFileLog); //initializes the class of validation
+            var request = new RequestConverterFileLogJson()
             {
                 FormatMadeAvailableLogConverted = FormatMadeAvailableLogConverted.UrlFile,
                 UrlLog = "https://s3.amazonaws.com/uux-itaas-static/minha-cdn-logs/input-01.txt"

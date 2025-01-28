@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ItaasSolution.Api.Infraestructure.Services
+namespace ItaasSolution.Api.Infraestructure.Services.File.Generator
 {
     public interface IFileGenerator
     {

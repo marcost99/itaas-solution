@@ -2,11 +2,11 @@
 using ItaasSolution.Api.Exception;
 using System.Text.RegularExpressions;
 
-namespace ItaasSolution.Api.Application.Validations.Log
+namespace ItaasSolution.Api.Application.Validations.FileLog
 {
-    public class DataLogMinhaCdnValidator : AbstractValidator<string[]>
+    public class DataFileLogMinhaCdnValidator : AbstractValidator<string[]>
     {
-        public DataLogMinhaCdnValidator()
+        public DataFileLogMinhaCdnValidator()
         {
             RuleFor(logData => logData)
                 .Must(logData =>

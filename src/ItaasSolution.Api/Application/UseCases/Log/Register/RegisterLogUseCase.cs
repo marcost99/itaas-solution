@@ -1,6 +1,6 @@
 ﻿using ItaasSolution.Api.Application.Validations.Log;
-using ItaasSolution.Api.Communication.Requests;
-using ItaasSolution.Api.Communication.Responses;
+using ItaasSolution.Api.Communication.Requests.Log;
+using ItaasSolution.Api.Communication.Responses.Log;
 using ItaasSolution.Api.Domain.Repositories;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Exception.ExceptionsBase;

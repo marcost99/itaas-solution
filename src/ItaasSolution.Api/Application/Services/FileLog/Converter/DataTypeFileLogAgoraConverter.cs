@@ -1,26 +1,27 @@
-﻿using ItaasSolution.Api.Application.Services;
+﻿using ItaasSolution.Api.Application.Services.FileLog.Info;
 using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
-using ItaasSolution.Api.Infraestructure.Services;
+using ItaasSolution.Api.Infraestructure.Services.File.Generator;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ItaasSolution.Api.Application.Conversions.Log
+namespace ItaasSolution.Api.Application.Services.FileLog.Converter
 {
-    public class FormatContentAgoraLogConverter : IFormatContentLogConverter
+    public class DataTypeFileLogAgoraConverter : IDataTypeFileLogConverter
     {
         private readonly IFileGenerator _fileGenerator;
         private readonly IInfoFileLog _infoFileLog;
 
-        public FormatContentAgoraLogConverter(IFileGenerator fileGenerator, IInfoFileLog infoFileLog)
+        public DataTypeFileLogAgoraConverter(IFileGenerator fileGenerator, IInfoFileLog infoFileLog)
         {
             _fileGenerator = fileGenerator;
             _infoFileLog = infoFileLog;
         }
 
         // This method converts the datas to the format Agora
-        public string ConverterListObjectToStringLog(List<ItaasSolution.Api.Domain.Entities.Log> logs)
+        public string ConverterListObjectToStringFileLog(List<Domain.Entities.Log> logs)
         {
             var contentTextLog = $"#Version: 1.0\n" +
                    $"#Date: {DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss")}\n" +
@@ -33,10 +34,10 @@ namespace ItaasSolution.Api.Application.Conversions.Log
         }
 
         // This method converts the datas to the format Agora and saves an file
-        public async Task<string> ConverterListObjectToUrlFileLogAsync(List<ItaasSolution.Api.Domain.Entities.Log> logs, long idFileLog)
+        public async Task<string> ConverterListObjectToUrlFileLogAsync(List<Domain.Entities.Log> logs, long idFileLog)
         {
             // converts the datas to the format Agora
-            var contentTextLogConverted = ConverterListObjectToStringLog(logs);
+            var contentTextLogConverted = ConverterListObjectToStringFileLog(logs);
 
             // saves an file
             var tag = "agora-logs";
@@ -56,6 +57,18 @@ namespace ItaasSolution.Api.Application.Conversions.Log
             else
             {
                 throw new ErrorOnValidationException(new List<string>() { ResourceErrorMessages.FILE_GENERATOR_ERROR });
+            }
+        }
+
+        // This method get the content the an file the text of an URL
+        public async Task<string> ConverterFileUrlToStringFileLogAsync(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                string content = await response.Content.ReadAsStringAsync();
+                return content;
             }
         }
     }

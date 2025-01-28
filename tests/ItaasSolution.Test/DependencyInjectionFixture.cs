@@ -1,4 +1,4 @@
-﻿using ItaasSolution.Api.Application.Services;
+﻿using ItaasSolution.Api.Application.Services.FileLog.Info;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;

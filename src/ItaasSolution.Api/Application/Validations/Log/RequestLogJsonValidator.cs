@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using ItaasSolution.Api.Communication.Requests;
+using ItaasSolution.Api.Communication.Requests.Log;
 using ItaasSolution.Api.Exception;
 
 namespace ItaasSolution.Api.Application.Validations.Log

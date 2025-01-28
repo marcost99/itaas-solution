@@ -1,8 +1,8 @@
 ﻿using ItaasSolution.Api.Api.Filters;
-using ItaasSolution.Api.Application.Conversions.Log;
-using ItaasSolution.Api.Application.Formatting.Log;
-using ItaasSolution.Api.Application.Services;
-using ItaasSolution.Api.Application.UseCases.Log.Converter;
+using ItaasSolution.Api.Application.Services.FileLog.Converter;
+using ItaasSolution.Api.Application.Services.FileLog.Info;
+using ItaasSolution.Api.Application.Services.Log.Converter;
+using ItaasSolution.Api.Application.UseCases.FileLog.Converter;
 using ItaasSolution.Api.Application.UseCases.Log.GetAll;
 using ItaasSolution.Api.Application.UseCases.Log.GetById;
 using ItaasSolution.Api.Application.UseCases.Log.Register;
@@ -11,7 +11,7 @@ using ItaasSolution.Api.Domain.Repositories;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Infraestructure.DataAccess;
 using ItaasSolution.Api.Infraestructure.DataAccess.Repositories;
-using ItaasSolution.Api.Infraestructure.Services;
+using ItaasSolution.Api.Infraestructure.Services.File.Generator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -100,9 +100,9 @@ namespace ItaasSolution.Api
         public void AddDependencyInjection(IServiceCollection services)
         {
             // Application
-            services.AddScoped<IConverterLogUseCase, ConverterLogUseCase>();
+            services.AddScoped<IConverterFileLogUseCase, ConverterFileLogUseCase>();
             services.AddScoped<IDataTypeLogConverter, DataTypeLogConverter>();
-            services.AddScoped<IFormatContentLogConverter, FormatContentAgoraLogConverter>();
+            services.AddScoped<IDataTypeFileLogConverter, DataTypeFileLogAgoraConverter>();
             services.AddScoped<IRegisterLogUseCase, RegisterLogUseCase>();
             services.AddScoped<IGetAllLogUseCase, GetAllLogUseCase>();
             services.AddScoped<IGetByIdLogUseCase, GetByIdLogUseCase>();

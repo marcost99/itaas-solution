@@ -1,20 +1,20 @@
 ﻿using FluentValidation;
-using ItaasSolution.Api.Application.Services;
-using ItaasSolution.Api.Communication.Requests;
+using ItaasSolution.Api.Application.Services.FileLog.Info;
+using ItaasSolution.Api.Communication.Requests.FileLog;
 using ItaasSolution.Api.Exception;
 using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ItaasSolution.Api.Application.Validations.Log
+namespace ItaasSolution.Api.Application.Validations.FileLog
 {
-    public class RequestConverterLogJsonValidator : AbstractValidator<RequestConverterLogJson>
+    public class RequestConverterFileLogJsonValidator : AbstractValidator<RequestConverterFileLogJson>
     {
         private readonly IInfoFileLog _infoFileLog;
         private static readonly HttpClient _httpClient = new HttpClient();
 
-        public RequestConverterLogJsonValidator(IInfoFileLog infoFileLog)
+        public RequestConverterFileLogJsonValidator(IInfoFileLog infoFileLog)
         {
             _infoFileLog = infoFileLog;
 
@@ -26,7 +26,7 @@ namespace ItaasSolution.Api.Application.Validations.Log
                 .MustAsync((url, cancellationToken) => UrlExistsAsync(url, cancellationToken)).WithMessage(ResourceErrorMessages.URL_LOG_NOT_EXISTS)
                 .Must(BeFileId).WithMessage(string.Format(ResourceErrorMessages.ID_FILE_LOG_INVALID, _infoFileLog.FileNameBase()))
                 .When(converterLog => converterLog.IdLog <= 0);
-            
+
         }
 
         private bool BeAValidUrl(string url)

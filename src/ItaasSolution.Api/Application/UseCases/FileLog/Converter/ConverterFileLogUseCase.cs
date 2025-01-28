@@ -1,9 +1,9 @@
-﻿using ItaasSolution.Api.Application.Conversions.Log;
-using ItaasSolution.Api.Application.Formatting.Log;
-using ItaasSolution.Api.Application.Services;
-using ItaasSolution.Api.Application.Validations.Log;
-using ItaasSolution.Api.Communication.Requests;
-using ItaasSolution.Api.Communication.Responses;
+﻿using ItaasSolution.Api.Application.Services.FileLog.Converter;
+using ItaasSolution.Api.Application.Services.FileLog.Info;
+using ItaasSolution.Api.Application.Services.Log.Converter;
+using ItaasSolution.Api.Application.Validations.FileLog;
+using ItaasSolution.Api.Communication.Requests.FileLog;
+using ItaasSolution.Api.Communication.Responses.FileLog;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
@@ -12,33 +12,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ItaasSolution.Api.Application.UseCases.Log.Converter
+namespace ItaasSolution.Api.Application.UseCases.FileLog.Converter
 {
-    public class ConverterLogUseCase : IConverterLogUseCase
+    public class ConverterFileLogUseCase : IConverterFileLogUseCase
     {
         private readonly ILogsReadOnlyRepository _repository;
         private readonly IDataTypeLogConverter _dataTypeLogConverter;
-        private readonly IFormatContentLogConverter _formatContentAgoraLogConverter;
+        private readonly IDataTypeFileLogConverter _dataTypeFileLogConverter;
         private readonly IInfoFileLog _infoFileLog;
 
-        public ConverterLogUseCase(ILogsReadOnlyRepository repository, IDataTypeLogConverter dataTypeLogConverter, IFormatContentLogConverter formatContentAgoraLogConverter, IInfoFileLog infoFileLog)
+        public ConverterFileLogUseCase(ILogsReadOnlyRepository repository, IDataTypeLogConverter dataTypeLogConverter, IDataTypeFileLogConverter dataTypeFileLogConverter, IInfoFileLog infoFileLog)
         {
             _repository = repository;
             _dataTypeLogConverter = dataTypeLogConverter;
-            _formatContentAgoraLogConverter = formatContentAgoraLogConverter;
+            _dataTypeFileLogConverter = dataTypeFileLogConverter;
             _infoFileLog = infoFileLog;
         }
-        
-        public async Task<ResponseConverterLogJson> ExecuteAsync(RequestConverterLogJson request)
+
+        public async Task<ResponseConverterFileLogJson> ExecuteAsync(RequestConverterFileLogJson request)
         {
             // Makes the validations
             await ValidateRequest(request);
 
-            List<ItaasSolution.Api.Domain.Entities.Log> logs;
+            List<Domain.Entities.Log> logs;
 
             if (request.IdLog > 0)
             { // Is the id of an log of the database in that the data must be gotten and converted in format solicited.
-                
+
                 var log = await _repository.GetByIdAsync(request.IdLog);
 
                 if (log == null)
@@ -46,9 +46,9 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
                     throw new NotFoundException(ResourceErrorMessages.LOG_NOT_FOUND);
                 }
 
-                logs = new List<ItaasSolution.Api.Domain.Entities.Log>()
+                logs = new List<Domain.Entities.Log>()
                 {
-                    new ItaasSolution.Api.Domain.Entities.Log
+                    new Domain.Entities.Log
                     (
                         log.HtttpMethod,
                         log.StatusCode,
@@ -66,20 +66,20 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 
                 // If the URL with file the is not empty gets the string the file
                 if (!string.IsNullOrWhiteSpace(request.UrlLog))
-                    contentFileLog = await _dataTypeLogConverter.ConverterFileUrlToFileStringLogAsync(request.UrlLog);
-                
+                    contentFileLog = await _dataTypeFileLogConverter.ConverterFileUrlToStringFileLogAsync(request.UrlLog);
+
                 // Formats the string of the log in an list of the log
                 var logArray = _dataTypeLogConverter.ConverterStringToArrayLog(contentFileLog);
 
-                // Makes the validation of the log data
-                ValidateDataLog(logArray);
+                // Makes the validation of the file log data
+                ValidateDataFileLog(logArray);
 
                 // Converts array of the logs in list of the object
                 logs = _dataTypeLogConverter.ConverterArrayToListObjectLog(logArray);
             }
 
             string urlFileLogConverted = string.Empty;
-            string contentTextLogConverted = string.Empty;
+            string contentTextFileLogConverted = string.Empty;
 
             if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.UrlFile)
             {
@@ -90,24 +90,24 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
                 else
                     idFileLog = _infoFileLog.FileId(request.UrlLog);
 
-                urlFileLogConverted = await _formatContentAgoraLogConverter.ConverterListObjectToUrlFileLogAsync(logs, idFileLog);
+                urlFileLogConverted = await _dataTypeFileLogConverter.ConverterListObjectToUrlFileLogAsync(logs, idFileLog);
             }
             else if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.ContentText)
             {
-                contentTextLogConverted = _formatContentAgoraLogConverter.ConverterListObjectToStringLog(logs);
+                contentTextFileLogConverted = _dataTypeFileLogConverter.ConverterListObjectToStringFileLog(logs);
             }
 
-            return new ResponseConverterLogJson()
+            return new ResponseConverterFileLogJson()
             {
                 UrlFileLogConverted = urlFileLogConverted,
-                ContentTextLogConverted = contentTextLogConverted,
+                ContentTextFileLogConverted = contentTextFileLogConverted,
             };
         }
 
         // This method makes the validation of the request
-        private async Task ValidateRequest(RequestConverterLogJson request)
+        private async Task ValidateRequest(RequestConverterFileLogJson request)
         {
-            var requestValidator = new RequestConverterLogJsonValidator(_infoFileLog);
+            var requestValidator = new RequestConverterFileLogJsonValidator(_infoFileLog);
             var resultRequestValidator = await requestValidator.ValidateAsync(request);
 
             if (resultRequestValidator.IsValid == false)
@@ -118,10 +118,10 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         }
 
         // This method makes the validation of the log data
-        private void ValidateDataLog(string[] logArray)
+        private void ValidateDataFileLog(string[] logArray)
         {
-            var dataLogMinhaCdnValidator = new DataLogMinhaCdnValidator();
-            var resultLogDataValidator = dataLogMinhaCdnValidator.Validate(logArray);
+            var dataFileLogMinhaCdnValidator = new DataFileLogMinhaCdnValidator();
+            var resultLogDataValidator = dataFileLogMinhaCdnValidator.Validate(logArray);
 
             if (resultLogDataValidator.IsValid == false)
             {

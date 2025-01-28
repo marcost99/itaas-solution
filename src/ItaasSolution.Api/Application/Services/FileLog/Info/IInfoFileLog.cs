@@ -1,4 +1,4 @@
-﻿namespace ItaasSolution.Api.Application.Services
+﻿namespace ItaasSolution.Api.Application.Services.FileLog.Info
 {
     public interface IInfoFileLog
     {

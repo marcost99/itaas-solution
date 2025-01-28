@@ -1,8 +1,8 @@
 ﻿using ItaasSolution.Api.Communication.Enums;
 
-namespace ItaasSolution.Api.Communication.Requests
+namespace ItaasSolution.Api.Communication.Requests.FileLog
 {
-    public class RequestConverterLogJson
+    public class RequestConverterFileLogJson
     {
         public FormatMadeAvailableLogConverted FormatMadeAvailableLogConverted { get; set; }
         public long IdLog { get; set; }

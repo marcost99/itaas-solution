@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace ItaasSolution.Api.Infraestructure.Services
+namespace ItaasSolution.Api.Infraestructure.Services.File.Generator
 {
     public class FileGenerator : IFileGenerator
     {
@@ -16,7 +16,7 @@ namespace ItaasSolution.Api.Infraestructure.Services
 
             await WriteToFileAsync(textFile, file);
 
-            if (File.Exists(file))
+            if (System.IO.File.Exists(file))
                 fileGenerated = true;
 
             return fileGenerated;

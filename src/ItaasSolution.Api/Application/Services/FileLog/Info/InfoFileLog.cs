@@ -5,13 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ItaasSolution.Api.Application.Services
+namespace ItaasSolution.Api.Application.Services.FileLog.Info
 {
     public class InfoFileLog : IInfoFileLog
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
-        
+
         public InfoFileLog(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -68,8 +68,9 @@ namespace ItaasSolution.Api.Application.Services
             var regex = fileNameBase + @"-(\d+)\.txt";
 
             var files = Directory.GetFiles(fullPath)
-                                 .Where(file => Regex.IsMatch(Path.GetFileName(file), regex))
-                                 .ToList();
+                             .Where(file => Regex.IsMatch(Path.GetFileName(file), regex))
+                             .OrderBy(file => int.Parse(Regex.Match(Path.GetFileName(file), @"\d+").Value))
+                             .ToList();
 
             var fileId = FileId(files[files.Count - 1]) + 1;
 

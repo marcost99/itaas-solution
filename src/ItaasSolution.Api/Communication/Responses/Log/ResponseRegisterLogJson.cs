@@ -1,4 +1,4 @@
-﻿namespace ItaasSolution.Api.Communication.Responses
+﻿namespace ItaasSolution.Api.Communication.Responses.Log
 {
     public class ResponseRegisterLogJson
     {
