@@ -21,7 +21,7 @@ namespace ItaasSolution.Api.Application.Validations.Log
                     }
                     return true;
                 })
-                .WithMessage(ResourceErrorMessages.LOG_DATA_INVALID);
+                .WithMessage(ResourceErrorMessages.LOG_AGORA_DATA_INVALID);
 
         }
     }

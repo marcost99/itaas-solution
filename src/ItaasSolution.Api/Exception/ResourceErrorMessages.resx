@@ -135,11 +135,14 @@
   <data name="HTTP_METHOD_NOT_EMPTY" xml:space="preserve">
     <value>The HttpMethod not must be empty.</value>
   </data>
+  <data name="ID_FILE_LOG_INVALID" xml:space="preserve">
+    <value>The file name must named [{0}] and/or id of the file name must be numeric. Example {0}-1.txt</value>
+  </data>
   <data name="ID_LOG_GREATER_THAN_ZERO" xml:space="preserve">
     <value>The id of the log must be greater than zero.</value>
   </data>
-  <data name="LOG_DATA_INVALID" xml:space="preserve">
-    <value>The format the log is not valid.</value>
+  <data name="LOG_AGORA_DATA_INVALID" xml:space="preserve">
+    <value>The content the log is not format minha cdn.</value>
   </data>
   <data name="LOG_NOT_FOUND" xml:space="preserve">
     <value>The log not found.</value>
@@ -167,5 +170,8 @@
   </data>
   <data name="URL_LOG_INVALID" xml:space="preserve">
     <value>The URL of the log is invalid.</value>
+  </data>
+  <data name="URL_LOG_NOT_EXISTS" xml:space="preserve">
+    <value>The URL of the log not exists.</value>
   </data>
 </root>

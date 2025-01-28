@@ -115,6 +115,15 @@ namespace ItaasSolution.Api.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The file name must named [{0}] and/or id of the file name must be numeric. Example {0}-1.txt.
+        /// </summary>
+        public static string ID_FILE_LOG_INVALID {
+            get {
+                return ResourceManager.GetString("ID_FILE_LOG_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The id of the log must be greater than zero..
         /// </summary>
         public static string ID_LOG_GREATER_THAN_ZERO {
@@ -124,11 +133,11 @@ namespace ItaasSolution.Api.Exception {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a The format the log is not valid..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The content the log is not format minha cdn..
         /// </summary>
-        public static string LOG_DATA_INVALID {
+        public static string LOG_AGORA_DATA_INVALID {
             get {
-                return ResourceManager.GetString("LOG_DATA_INVALID", resourceCulture);
+                return ResourceManager.GetString("LOG_AGORA_DATA_INVALID", resourceCulture);
             }
         }
         
@@ -210,6 +219,15 @@ namespace ItaasSolution.Api.Exception {
         public static string URL_LOG_INVALID {
             get {
                 return ResourceManager.GetString("URL_LOG_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The URL of the log not exists..
+        /// </summary>
+        public static string URL_LOG_NOT_EXISTS {
+            get {
+                return ResourceManager.GetString("URL_LOG_NOT_EXISTS", resourceCulture);
             }
         }
     }

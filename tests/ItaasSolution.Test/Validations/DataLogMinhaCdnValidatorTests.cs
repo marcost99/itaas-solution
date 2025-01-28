@@ -27,7 +27,7 @@ namespace ItaasSolution.Test.Validations
             var result = validator.Validate(logArray); //validates the datas of request
 
             result.IsValid.Should().BeFalse(); //verifies the results of validations
-            result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals(ResourceErrorMessages.LOG_DATA_INVALID));
+            result.Errors.Should().ContainSingle().And.Contain(e => e.ErrorMessage.Equals(ResourceErrorMessages.LOG_AGORA_DATA_INVALID));
         }
     }
 }

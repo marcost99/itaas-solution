@@ -1,23 +1,22 @@
-﻿using ItaasSolution.Api.Exception;
+﻿using ItaasSolution.Api.Application.Services;
+using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
 using ItaasSolution.Api.Infraestructure.Services;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ItaasSolution.Api.Application.Conversions.Log
 {
     public class FormatContentAgoraLogConverter : IFormatContentLogConverter
     {
-        private readonly IConfiguration _configuration;
         private readonly IFileGenerator _fileGenerator;
+        private readonly IInfoFileLog _infoFileLog;
 
-        public FormatContentAgoraLogConverter(IConfiguration configuration, IFileGenerator fileGenerator)
+        public FormatContentAgoraLogConverter(IFileGenerator fileGenerator, IInfoFileLog infoFileLog)
         {
-            _configuration = configuration;
             _fileGenerator = fileGenerator;
+            _infoFileLog = infoFileLog;
         }
 
         // This method converts the datas to the format Agora
@@ -41,20 +40,18 @@ namespace ItaasSolution.Api.Application.Conversions.Log
 
             // saves an file
             var tag = "agora-logs";
-            var fileRepositories = _configuration.GetSection("Settings:FileRepository").Get<List<Dictionary<string, string>>>();
-            var physicalPath = fileRepositories
-                .FirstOrDefault(repo => repo["Tag"] == tag)?["PhysicalPath"];
-            var fileName = string.Format("input-{0}.txt", idFileLog);
-            
+            var physicalPath = _infoFileLog.PhysicalPath(tag);
+            var fileName = _infoFileLog.FileNameFull(idFileLog);
+
             var result = await _fileGenerator.FileGeneratorAsync(contentTextLogConverted, physicalPath, fileName);
 
             // generates the url with the file
             if (result == true)
             {
-                var requestPath = fileRepositories
-                    .FirstOrDefault(repo => repo["Tag"] == tag)?["RequestPath"];
+                var urlHost = _infoFileLog.UrlHost();
+                var urlPath = _infoFileLog.UrlPath(tag);
 
-                return "https://localhost:44395" + requestPath + "/" + fileName;
+                return urlHost + urlPath + "/" + fileName;
             }
             else
             {

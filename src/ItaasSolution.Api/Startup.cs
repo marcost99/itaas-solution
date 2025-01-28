@@ -1,10 +1,12 @@
 ﻿using ItaasSolution.Api.Api.Filters;
 using ItaasSolution.Api.Application.Conversions.Log;
 using ItaasSolution.Api.Application.Formatting.Log;
+using ItaasSolution.Api.Application.Services;
 using ItaasSolution.Api.Application.UseCases.Log.Converter;
 using ItaasSolution.Api.Application.UseCases.Log.GetAll;
 using ItaasSolution.Api.Application.UseCases.Log.GetById;
 using ItaasSolution.Api.Application.UseCases.Log.Register;
+using ItaasSolution.Api.Application.Validations.Log;
 using ItaasSolution.Api.Domain.Repositories;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Infraestructure.DataAccess;
@@ -34,6 +36,8 @@ namespace ItaasSolution.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+
             // If have an exception redirect to class ExceptionFilter
             services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter))).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -102,6 +106,7 @@ namespace ItaasSolution.Api
             services.AddScoped<IRegisterLogUseCase, RegisterLogUseCase>();
             services.AddScoped<IGetAllLogUseCase, GetAllLogUseCase>();
             services.AddScoped<IGetByIdLogUseCase, GetByIdLogUseCase>();
+            services.AddScoped<IInfoFileLog, InfoFileLog>();
 
             // Infraestructure
             services.AddScoped<IFileGenerator, FileGenerator>();

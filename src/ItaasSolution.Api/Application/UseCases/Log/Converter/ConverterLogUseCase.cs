@@ -1,5 +1,6 @@
 ﻿using ItaasSolution.Api.Application.Conversions.Log;
 using ItaasSolution.Api.Application.Formatting.Log;
+using ItaasSolution.Api.Application.Services;
 using ItaasSolution.Api.Application.Validations.Log;
 using ItaasSolution.Api.Communication.Requests;
 using ItaasSolution.Api.Communication.Responses;
@@ -18,18 +19,20 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         private readonly ILogsReadOnlyRepository _repository;
         private readonly IDataTypeLogConverter _dataTypeLogConverter;
         private readonly IFormatContentLogConverter _formatContentAgoraLogConverter;
+        private readonly IInfoFileLog _infoFileLog;
 
-        public ConverterLogUseCase(ILogsReadOnlyRepository repository, IDataTypeLogConverter dataTypeLogConverter, IFormatContentLogConverter formatContentAgoraLogConverter)
+        public ConverterLogUseCase(ILogsReadOnlyRepository repository, IDataTypeLogConverter dataTypeLogConverter, IFormatContentLogConverter formatContentAgoraLogConverter, IInfoFileLog infoFileLog)
         {
             _repository = repository;
             _dataTypeLogConverter = dataTypeLogConverter;
             _formatContentAgoraLogConverter = formatContentAgoraLogConverter;
+            _infoFileLog = infoFileLog;
         }
         
         public async Task<ResponseConverterLogJson> ExecuteAsync(RequestConverterLogJson request)
         {
             // Makes the validations
-            ValidateRequest(request);
+            await ValidateRequest(request);
 
             List<ItaasSolution.Api.Domain.Entities.Log> logs;
 
@@ -77,11 +80,22 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
 
             string urlFileLogConverted = string.Empty;
             string contentTextLogConverted = string.Empty;
-            
+
             if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.UrlFile)
-                urlFileLogConverted = await _formatContentAgoraLogConverter.ConverterListObjectToUrlFileLogAsync(logs, 1);
+            {
+                // Sets the id of the file log
+                long idFileLog = 0;
+                if (request.IdLog > 0)
+                    idFileLog = _infoFileLog.NewFileId();
+                else
+                    idFileLog = _infoFileLog.FileId(request.UrlLog);
+
+                urlFileLogConverted = await _formatContentAgoraLogConverter.ConverterListObjectToUrlFileLogAsync(logs, idFileLog);
+            }
             else if (request.FormatMadeAvailableLogConverted == Communication.Enums.FormatMadeAvailableLogConverted.ContentText)
+            {
                 contentTextLogConverted = _formatContentAgoraLogConverter.ConverterListObjectToStringLog(logs);
+            }
 
             return new ResponseConverterLogJson()
             {
@@ -91,10 +105,10 @@ namespace ItaasSolution.Api.Application.UseCases.Log.Converter
         }
 
         // This method makes the validation of the request
-        private void ValidateRequest(RequestConverterLogJson request)
+        private async Task ValidateRequest(RequestConverterLogJson request)
         {
-            var requestValidator = new RequestConverterLogJsonValidator();
-            var resultRequestValidator = requestValidator.Validate(request);
+            var requestValidator = new RequestConverterLogJsonValidator(_infoFileLog);
+            var resultRequestValidator = await requestValidator.ValidateAsync(request);
 
             if (resultRequestValidator.IsValid == false)
             {
