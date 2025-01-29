@@ -88,6 +88,15 @@ namespace ItaasSolution.Api.Exception {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a The file log not found..
+        /// </summary>
+        public static string FILE_LOG_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("FILE_LOG_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a The format made available the file is invalid. Chooses entry the seguints options (0: url of the file of the log; 1: content the log).
         /// </summary>
         public static string FORMAT_LOG_INVALID {

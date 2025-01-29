@@ -126,6 +126,9 @@
   <data name="FILE_GENERATOR_ERROR" xml:space="preserve">
     <value>Ocurred an error in the generation of the file.</value>
   </data>
+  <data name="FILE_LOG_NOT_FOUND" xml:space="preserve">
+    <value>The file log not found.</value>
+  </data>
   <data name="FORMAT_LOG_INVALID" xml:space="preserve">
     <value>The format made available the file is invalid. Chooses entry the seguints options (0: url of the file of the log; 1: content the log)</value>
   </data>

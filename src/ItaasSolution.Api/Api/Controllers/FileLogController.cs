@@ -1,5 +1,6 @@
 ﻿using ItaasSolution.Api.Application.UseCases.FileLog.Converter;
 using ItaasSolution.Api.Application.UseCases.FileLog.GetAll;
+using ItaasSolution.Api.Application.UseCases.FileLog.GetById;
 using ItaasSolution.Api.Communication.Requests.FileLog;
 using ItaasSolution.Api.Communication.Responses;
 using ItaasSolution.Api.Communication.Responses.FileLog;
@@ -14,7 +15,7 @@ namespace ItaasSolution.Api.Api.Controllers
     public class FileLogController : ControllerBase
     {
         /// <summary>
-        /// converter log in format solicited.
+        /// converter log in format solicited [1-Transformação de um formato de Log para outro].
         /// </summary>
         /// <param name="request">model of request.</param>
         /// <param name="request.FormatMadeAvailableLogConverted">Is the format made available log converted. Chooses entry the seguints options (0: url of the file of the log; 1: content the log)</param>
@@ -32,7 +33,7 @@ namespace ItaasSolution.Api.Api.Controllers
         }
 
         /// <summary>
-        /// gets all file logs.
+        /// gets all file logs [3-Buscar Logs Transformados no Backend].
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(ResponseConvertedFileLogsJson), StatusCodes.Status200OK)]
@@ -45,6 +46,21 @@ namespace ItaasSolution.Api.Api.Controllers
                 return Ok(response);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// gets file log by id [5-Buscar Logs Transformados por Identicador].
+        /// </summary>
+        /// <param name="id">Id of file log. Exemple: 1.</param>
+        [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(ResponseConvertedFileLogJson), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByIdAsync([FromServices] IGetByIdFileLogUseCase useCase, [FromRoute] long id)
+        {
+            var response = await useCase.ExecuteAsync(id);
+
+            return Ok(response);
         }
     }
 }

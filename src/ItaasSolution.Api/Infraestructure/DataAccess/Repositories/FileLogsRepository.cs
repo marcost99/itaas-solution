@@ -70,9 +70,40 @@ namespace ItaasSolution.Api.Infraestructure.DataAccess.Repositories
             return fileLogsFull;
         }
 
-        public Task<FileLog> GetByIdAsync(long id)
+        private string GetPathFileLog(string tag, long id)
         {
-            throw new System.NotImplementedException();
+            var physicalPath = _infoFileLog.GetPhysicalPath(tag);
+            var fullPath = Path.GetFullPath(physicalPath);
+
+            var regexFileName = _infoFileLog.GetRegexFileName();
+            var regexFileNameId = _infoFileLog.GetRegexFileNameId();
+
+            var pathFileLog = Directory.GetFiles(fullPath)
+                    .FirstOrDefault(file => int.Parse(Regex.Match(Path.GetFileName(file), _infoFileLog.GetRegexFileNameId()).Value) == id);
+
+            return pathFileLog;
+        }
+
+        public async Task<FileLog> GetByIdAsync(long id)
+        {
+            string contentTextFileLogMinhaCdn = string.Empty;
+            string contentTextFileAgora = string.Empty;
+
+            var pathFileLogMinhaCdn = GetPathFileLog("minha-cdn-logs", id);
+            contentTextFileLogMinhaCdn = !string.IsNullOrWhiteSpace(pathFileLogMinhaCdn) ? await _handlerIOFile.ReadToFileAsync(pathFileLogMinhaCdn) : string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(contentTextFileLogMinhaCdn))
+            {
+                var pathFileLogAgora = GetPathFileLog("agora-logs", id);
+                contentTextFileAgora = !string.IsNullOrWhiteSpace(pathFileLogAgora) ? await _handlerIOFile.ReadToFileAsync(pathFileLogAgora) : string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(contentTextFileLogMinhaCdn) || string.IsNullOrWhiteSpace(contentTextFileAgora))
+                return null;
+
+            var fileLog = new FileLog(id, contentTextFileLogMinhaCdn, contentTextFileAgora);
+
+            return fileLog;
         }
 
         public long GetNewFileId()

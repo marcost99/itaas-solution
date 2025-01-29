@@ -15,7 +15,7 @@ namespace ItaasSolution.Api.Api.Controllers
     public class LogController : ControllerBase
     {
         /// <summary>
-        /// registers a new log.
+        /// registers a new log [6-Salvar Logs].
         /// </summary>
         /// <param name="request">model of request.</param>
         /// <param name="request.HtttpMethod">Example: GET</param>
@@ -34,7 +34,7 @@ namespace ItaasSolution.Api.Api.Controllers
         }
 
         /// <summary>
-        /// gets all logs.
+        /// gets all logs [2-Buscar Logs Salvos].
         /// </summary>
         [HttpGet]
         [ProducesResponseType(typeof(ResponseLogsJson), StatusCodes.Status200OK)]
@@ -50,7 +50,7 @@ namespace ItaasSolution.Api.Api.Controllers
         }
 
         /// <summary>
-        /// gets log by id.
+        /// gets log by id [4-Buscar Logs Salvos por Identicador].
         /// </summary>
         /// <param name="id">Id of log. Exemple: 1.</param>
         [HttpGet]

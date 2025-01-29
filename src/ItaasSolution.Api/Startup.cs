@@ -3,6 +3,7 @@ using ItaasSolution.Api.Application.Services.FileLog.Converter;
 using ItaasSolution.Api.Application.Services.Log.Converter;
 using ItaasSolution.Api.Application.UseCases.FileLog.Converter;
 using ItaasSolution.Api.Application.UseCases.FileLog.GetAll;
+using ItaasSolution.Api.Application.UseCases.FileLog.GetById;
 using ItaasSolution.Api.Application.UseCases.Log.GetAll;
 using ItaasSolution.Api.Application.UseCases.Log.GetById;
 using ItaasSolution.Api.Application.UseCases.Log.Register;
@@ -110,6 +111,7 @@ namespace ItaasSolution.Api
             services.AddScoped<IGetByIdLogUseCase, GetByIdLogUseCase>();
             services.AddScoped<IInfoFileLog, InfoFileLog>();
             services.AddScoped<IGetAllFileLogUseCase, GetAllFileLogUseCase>();
+            services.AddScoped<IGetByIdFileLogUseCase, GetByIdFileLogUseCase>();
             services.AddScoped<IFileLogsReadOnlyRepository, FileLogsRepository>();
 
             // Infraestructure
