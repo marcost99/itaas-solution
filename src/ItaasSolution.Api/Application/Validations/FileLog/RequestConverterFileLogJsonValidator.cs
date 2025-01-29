@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using ItaasSolution.Api.Application.Services.FileLog.Info;
 using ItaasSolution.Api.Communication.Requests.FileLog;
 using ItaasSolution.Api.Exception;
+using ItaasSolution.Api.Infraestructure.Services.FileLog.Info;
 using System;
 using System.Net.Http;
 using System.Threading;
@@ -24,7 +24,7 @@ namespace ItaasSolution.Api.Application.Validations.FileLog
                 .NotEmpty().WithMessage(ResourceErrorMessages.URL_LOG_EMPTY)
                 .Must(BeAValidUrl).WithMessage(ResourceErrorMessages.URL_LOG_INVALID)
                 .MustAsync((url, cancellationToken) => UrlExistsAsync(url, cancellationToken)).WithMessage(ResourceErrorMessages.URL_LOG_NOT_EXISTS)
-                .Must(BeFileId).WithMessage(string.Format(ResourceErrorMessages.ID_FILE_LOG_INVALID, _infoFileLog.FileNameBase()))
+                .Must(BeFileId).WithMessage(string.Format(ResourceErrorMessages.ID_FILE_LOG_INVALID, _infoFileLog.GetFileNameBase()))
                 .When(converterLog => converterLog.IdLog <= 0);
 
         }
@@ -36,7 +36,7 @@ namespace ItaasSolution.Api.Application.Validations.FileLog
 
         private bool BeFileId(string url)
         {
-            var idFileLog = _infoFileLog.FileId(url);
+            var idFileLog = _infoFileLog.GetFileId(url);
             return idFileLog > 0;
         }
 

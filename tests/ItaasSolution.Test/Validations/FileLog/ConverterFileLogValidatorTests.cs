@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
-using ItaasSolution.Api.Application.Services.FileLog.Info;
 using ItaasSolution.Api.Application.Validations.FileLog;
 using ItaasSolution.Api.Communication.Enums;
 using ItaasSolution.Api.Communication.Requests.FileLog;
+using ItaasSolution.Api.Infraestructure.Services.FileLog.Info;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Xunit;

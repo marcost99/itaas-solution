@@ -1,12 +1,13 @@
 ﻿using ItaasSolution.Api.Application.Services.FileLog.Converter;
-using ItaasSolution.Api.Application.Services.FileLog.Info;
 using ItaasSolution.Api.Application.Services.Log.Converter;
 using ItaasSolution.Api.Application.Validations.FileLog;
 using ItaasSolution.Api.Communication.Requests.FileLog;
 using ItaasSolution.Api.Communication.Responses.FileLog;
+using ItaasSolution.Api.Domain.Repositories.FileLogs;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
+using ItaasSolution.Api.Infraestructure.Services.FileLog.Info;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,15 @@ namespace ItaasSolution.Api.Application.UseCases.FileLog.Converter
         private readonly IDataTypeLogConverter _dataTypeLogConverter;
         private readonly IDataTypeFileLogConverter _dataTypeFileLogConverter;
         private readonly IInfoFileLog _infoFileLog;
+        private readonly IFileLogsReadOnlyRepository _fileLogsReadOnlyRepository;
 
-        public ConverterFileLogUseCase(ILogsReadOnlyRepository repository, IDataTypeLogConverter dataTypeLogConverter, IDataTypeFileLogConverter dataTypeFileLogConverter, IInfoFileLog infoFileLog)
+        public ConverterFileLogUseCase(ILogsReadOnlyRepository repository, IDataTypeLogConverter dataTypeLogConverter, IDataTypeFileLogConverter dataTypeFileLogConverter, IInfoFileLog infoFileLog, IFileLogsReadOnlyRepository fileLogsReadOnlyRepository)
         {
             _repository = repository;
             _dataTypeLogConverter = dataTypeLogConverter;
             _dataTypeFileLogConverter = dataTypeFileLogConverter;
             _infoFileLog = infoFileLog;
+            _fileLogsReadOnlyRepository = fileLogsReadOnlyRepository;
         }
 
         public async Task<ResponseConverterFileLogJson> ExecuteAsync(RequestConverterFileLogJson request)
@@ -86,9 +89,9 @@ namespace ItaasSolution.Api.Application.UseCases.FileLog.Converter
                 // Sets the id of the file log
                 long idFileLog = 0;
                 if (request.IdLog > 0)
-                    idFileLog = _infoFileLog.NewFileId();
+                    idFileLog = _fileLogsReadOnlyRepository.GetNewFileId();
                 else
-                    idFileLog = _infoFileLog.FileId(request.UrlLog);
+                    idFileLog = _infoFileLog.GetFileId(request.UrlLog);
 
                 urlFileLogConverted = await _dataTypeFileLogConverter.ConverterListObjectToUrlFileLogAsync(logs, idFileLog);
             }

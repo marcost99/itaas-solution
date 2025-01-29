@@ -1,17 +1,19 @@
 ﻿using ItaasSolution.Api.Api.Filters;
 using ItaasSolution.Api.Application.Services.FileLog.Converter;
-using ItaasSolution.Api.Application.Services.FileLog.Info;
 using ItaasSolution.Api.Application.Services.Log.Converter;
 using ItaasSolution.Api.Application.UseCases.FileLog.Converter;
+using ItaasSolution.Api.Application.UseCases.FileLog.GetAll;
 using ItaasSolution.Api.Application.UseCases.Log.GetAll;
 using ItaasSolution.Api.Application.UseCases.Log.GetById;
 using ItaasSolution.Api.Application.UseCases.Log.Register;
-using ItaasSolution.Api.Application.Validations.Log;
 using ItaasSolution.Api.Domain.Repositories;
+using ItaasSolution.Api.Domain.Repositories.FileLogs;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Infraestructure.DataAccess;
 using ItaasSolution.Api.Infraestructure.DataAccess.Repositories;
 using ItaasSolution.Api.Infraestructure.Services.File.Generator;
+using ItaasSolution.Api.Infraestructure.Services.File.HandlerIO;
+using ItaasSolution.Api.Infraestructure.Services.FileLog.Info;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -107,9 +109,12 @@ namespace ItaasSolution.Api
             services.AddScoped<IGetAllLogUseCase, GetAllLogUseCase>();
             services.AddScoped<IGetByIdLogUseCase, GetByIdLogUseCase>();
             services.AddScoped<IInfoFileLog, InfoFileLog>();
+            services.AddScoped<IGetAllFileLogUseCase, GetAllFileLogUseCase>();
+            services.AddScoped<IFileLogsReadOnlyRepository, FileLogsRepository>();
 
             // Infraestructure
-            services.AddScoped<IFileGenerator, FileGenerator>();
+            services.AddScoped<IHandlerIOFile, HandlerIOFile>();
+            services.AddScoped<IGeneratorFile, GeneratorFile>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILogsWriteOnlyRepository, LogsRepository>();
             services.AddScoped<ILogsReadOnlyRepository, LogsRepository>();

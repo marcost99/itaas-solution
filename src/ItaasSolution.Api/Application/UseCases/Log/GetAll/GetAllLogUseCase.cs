@@ -1,5 +1,4 @@
-﻿using ItaasSolution.Api.Communication.Responses;
-using ItaasSolution.Api.Communication.Responses.Log;
+﻿using ItaasSolution.Api.Communication.Responses.Log;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using System.Threading.Tasks;
 

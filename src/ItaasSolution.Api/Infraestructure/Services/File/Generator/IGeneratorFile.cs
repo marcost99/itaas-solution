@@ -2,7 +2,7 @@
 
 namespace ItaasSolution.Api.Infraestructure.Services.File.Generator
 {
-    public interface IFileGenerator
+    public interface IGeneratorFile
     {
         Task<bool> FileGeneratorAsync(string textFile, string physicalPath, string fileName);
     }

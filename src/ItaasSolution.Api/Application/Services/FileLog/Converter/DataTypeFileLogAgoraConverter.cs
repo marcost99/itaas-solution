@@ -1,7 +1,7 @@
-﻿using ItaasSolution.Api.Application.Services.FileLog.Info;
-using ItaasSolution.Api.Exception;
+﻿using ItaasSolution.Api.Exception;
 using ItaasSolution.Api.Exception.ExceptionsBase;
 using ItaasSolution.Api.Infraestructure.Services.File.Generator;
+using ItaasSolution.Api.Infraestructure.Services.FileLog.Info;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,10 +11,10 @@ namespace ItaasSolution.Api.Application.Services.FileLog.Converter
 {
     public class DataTypeFileLogAgoraConverter : IDataTypeFileLogConverter
     {
-        private readonly IFileGenerator _fileGenerator;
+        private readonly IGeneratorFile _fileGenerator;
         private readonly IInfoFileLog _infoFileLog;
 
-        public DataTypeFileLogAgoraConverter(IFileGenerator fileGenerator, IInfoFileLog infoFileLog)
+        public DataTypeFileLogAgoraConverter(IGeneratorFile fileGenerator, IInfoFileLog infoFileLog)
         {
             _fileGenerator = fileGenerator;
             _infoFileLog = infoFileLog;
@@ -41,16 +41,16 @@ namespace ItaasSolution.Api.Application.Services.FileLog.Converter
 
             // saves an file
             var tag = "agora-logs";
-            var physicalPath = _infoFileLog.PhysicalPath(tag);
-            var fileName = _infoFileLog.FileNameFull(idFileLog);
+            var physicalPath = _infoFileLog.GetPhysicalPath(tag);
+            var fileName = _infoFileLog.GetFileNameFull(idFileLog);
 
             var result = await _fileGenerator.FileGeneratorAsync(contentTextLogConverted, physicalPath, fileName);
 
             // generates the url with the file
             if (result == true)
             {
-                var urlHost = _infoFileLog.UrlHost();
-                var urlPath = _infoFileLog.UrlPath(tag);
+                var urlHost = _infoFileLog.GetUrlHost();
+                var urlPath = _infoFileLog.GetUrlPath(tag);
 
                 return urlHost + urlPath + "/" + fileName;
             }

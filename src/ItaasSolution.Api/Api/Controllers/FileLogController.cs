@@ -1,4 +1,5 @@
 ﻿using ItaasSolution.Api.Application.UseCases.FileLog.Converter;
+using ItaasSolution.Api.Application.UseCases.FileLog.GetAll;
 using ItaasSolution.Api.Communication.Requests.FileLog;
 using ItaasSolution.Api.Communication.Responses;
 using ItaasSolution.Api.Communication.Responses.FileLog;
@@ -28,6 +29,22 @@ namespace ItaasSolution.Api.Api.Controllers
         {
             var response = await usecase.ExecuteAsync(request);
             return Created(string.Empty, response);
+        }
+
+        /// <summary>
+        /// gets all file logs.
+        /// </summary>
+        [HttpGet]
+        [ProducesResponseType(typeof(ResponseConvertedFileLogsJson), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> GetAllAsync([FromServices] IGetAllFileLogUseCase useCase)
+        {
+            var response = await useCase.ExecuteAsync();
+
+            if (response.FileLogs.Count > 0)
+                return Ok(response);
+
+            return NoContent();
         }
     }
 }
