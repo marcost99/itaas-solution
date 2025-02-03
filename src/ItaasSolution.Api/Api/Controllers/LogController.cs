@@ -41,10 +41,12 @@ namespace ItaasSolution.Api.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetAllAsync([FromServices] IGetAllLogUseCase useCase)
         {
-            var response = await useCase.ExecuteAsync();
+            var (cacheStatus, data) = await useCase.ExecuteAsync();
 
-            if (response.Logs.Count > 0)
-                return Ok(response);
+            Response.Headers.Add("X-Cache-Status", cacheStatus);
+
+            if (data.Logs.Count > 0)
+                return Ok(data);
 
             return NoContent();
         }

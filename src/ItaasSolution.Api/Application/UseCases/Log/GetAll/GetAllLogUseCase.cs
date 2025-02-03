@@ -13,9 +13,11 @@ namespace ItaasSolution.Api.Application.UseCases.Log.GetAll
             _repository = repository;
         }
 
-        public async Task<ResponseLogsJson> ExecuteAsync()
+        public async Task<(string cacheStatus, ResponseLogsJson data)> ExecuteAsync()
         {
-            var entities = await _repository.GetAllAsync();
+            var result = await _repository.GetAllAsync();
+            
+            var entities = result.data;
 
             var response = new ResponseLogsJson();
 
@@ -30,7 +32,7 @@ namespace ItaasSolution.Api.Application.UseCases.Log.GetAll
                 response.Logs.Add(log);
             }
 
-            return response;
+            return (result.cacheStatus, response);
         }
     }
 }
