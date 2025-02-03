@@ -19,6 +19,10 @@ public class RequestLoggingMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        // Only request of the api are processings by the middleware
+        if (!context.Request.Path.Value.StartsWith("/api"))
+            return;
+
         var stopwatch = new Stopwatch();
         stopwatch.Start();
 
