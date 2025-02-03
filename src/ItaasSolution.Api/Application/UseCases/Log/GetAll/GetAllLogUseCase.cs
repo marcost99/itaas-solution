@@ -19,7 +19,7 @@ namespace ItaasSolution.Api.Application.UseCases.Log.GetAll
             
             var entities = result.data;
 
-            var response = new ResponseLogsJson();
+            var data = new ResponseLogsJson();
 
             foreach (var entity in entities) 
             {
@@ -29,10 +29,10 @@ namespace ItaasSolution.Api.Application.UseCases.Log.GetAll
                 log.StatusCode = entity.StatusCode;
                 log.UriPath = entity.UriPath;
 
-                response.Logs.Add(log);
+                data.Logs.Add(log);
             }
 
-            return (result.cacheStatus, response);
+            return (result.cacheStatus, data);
         }
     }
 }

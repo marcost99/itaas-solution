@@ -1,7 +1,7 @@
 ﻿using ItaasSolution.Api.Domain.Entities;
 using ItaasSolution.Api.Domain.Repositories.Logs;
+using ItaasSolution.Api.Infraestructure.Services.Cache;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,13 +11,13 @@ namespace ItaasSolution.Api.Infraestructure.DataAccess.Repositories
     public class LogsRepository : ILogsWriteOnlyRepository, ILogsReadOnlyRepository
     {
         private readonly ItaasSolutionDbContext _dbContext;
-        private readonly IMemoryCache _memoryCache;
+        private readonly ICacheService _cacheService;
         private const string _cacheKey = "logs-get-all";
 
-        public LogsRepository(ItaasSolutionDbContext dbContext, IMemoryCache memoryCache)
+        public LogsRepository(ItaasSolutionDbContext dbContext, ICacheService cacheService)
         {
             _dbContext = dbContext;
-            _memoryCache = memoryCache;
+            _cacheService = cacheService;
         }
         public async Task AddAsync(ItaasSolution.Api.Domain.Entities.Log log)
         {
@@ -26,19 +26,10 @@ namespace ItaasSolution.Api.Infraestructure.DataAccess.Repositories
 
         public async Task<(string cacheStatus, List<Log> data)> GetAllAsync()
         {
-            if (_memoryCache.TryGetValue(_cacheKey, out List<Log> cachedData))
+            return await _cacheService.GetOrSetCacheAsync(_cacheKey, async () =>
             {
-                return ("HIT", cachedData);
-            }
-
-            var repositoryData = await _dbContext.Log.AsNoTracking().ToListAsync();
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetSlidingExpiration(TimeSpan.FromMinutes(1));
-
-            _memoryCache.Set(_cacheKey, repositoryData, cacheEntryOptions);
-
-            return ("MISS", repositoryData);
+                return await _dbContext.Log.AsNoTracking().ToListAsync();
+            }, TimeSpan.FromMinutes(1));
         }
 
         public async Task<Log> GetByIdAsync(long id)

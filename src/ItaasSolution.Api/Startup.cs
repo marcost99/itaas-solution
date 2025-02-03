@@ -12,6 +12,7 @@ using ItaasSolution.Api.Domain.Repositories.FileLogs;
 using ItaasSolution.Api.Domain.Repositories.Logs;
 using ItaasSolution.Api.Infraestructure.DataAccess;
 using ItaasSolution.Api.Infraestructure.DataAccess.Repositories;
+using ItaasSolution.Api.Infraestructure.Services.Cache;
 using ItaasSolution.Api.Infraestructure.Services.File.Generator;
 using ItaasSolution.Api.Infraestructure.Services.File.HandlerIO;
 using ItaasSolution.Api.Infraestructure.Services.FileLog.Info;
@@ -119,6 +120,7 @@ namespace ItaasSolution.Api
             // Infraestructure
             services.AddScoped<IHandlerIOFile, HandlerIOFile>();
             services.AddScoped<IGeneratorFile, GeneratorFile>();
+            services.AddScoped<ICacheService, CacheService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ILogsWriteOnlyRepository, LogsRepository>();
             services.AddScoped<ILogsReadOnlyRepository, LogsRepository>();
