@@ -1,7 +1,6 @@
 ﻿using ItaasSolution.Api.Application.UseCases.Log.Register;
 using ItaasSolution.Api.Communication.Requests.Log;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
@@ -41,7 +40,7 @@ public class RequestLoggingMiddleware
             // Capture the request data after the response has been generated
             var httpMethod = context.Request.Method;
             var statusCode = context.Response.StatusCode;
-            var uriPath = "/" + context.GetRouteData()?.Values["controller"]?.ToString();
+            var uriPath = context.Request.Path.Value;
             var timeTaken = stopwatch.ElapsedMilliseconds;
             var responseSize = (int)responseBodyStream.Length;
             var cacheStatus = "MISS";
