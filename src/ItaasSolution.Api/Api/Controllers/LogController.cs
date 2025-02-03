@@ -43,10 +43,8 @@ namespace ItaasSolution.Api.Api.Controllers
         {
             var (cacheStatus, data) = await useCase.ExecuteAsync();
 
-            Response.Headers.Add("X-Cache-Status", cacheStatus);
-
             if (data.Logs.Count > 0)
-                return Ok(data);
+                return Ok(new { CacheStatus = cacheStatus, Data = data });
 
             return NoContent();
         }

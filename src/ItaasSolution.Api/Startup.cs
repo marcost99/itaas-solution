@@ -99,6 +99,9 @@ namespace ItaasSolution.Api
             // Sets the static files
             AddStaticFiles(app);
 
+            // Sets the middleware of logging of the requests
+            app.UseMiddleware<RequestLoggingMiddleware>();
+
             app.UseMvc();
         }
 
